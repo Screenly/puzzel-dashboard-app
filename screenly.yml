@@ -1,0 +1,60 @@
+---
+syntax: manifest_v1
+description: Display real-time Puzzel Contact Centre queue and agent stats on your Screenly digital signage screens
+categories:
+  - Dashboards
+ready_signal: true
+settings:
+  access_token:
+    type: secret
+    title: Access Token
+    optional: true
+    help_text: For testing only. Production support for Puzzel ID OAuth is not implemented yet.
+  api_base_url:
+    type: string
+    default_value: 'https://api.puzzel.com/ContactCentre5'
+    title: API Base URL
+    optional: true
+    help_text:
+      schema_version: 1
+      properties:
+        advanced: true
+        help_text: Base URL of the Puzzel Contact Centre REST API. Override to point at a local mock server during development.
+        type: url
+  customer_key:
+    type: string
+    title: Customer Key
+    optional: false
+    help_text: Your Puzzel customer number.
+  display_errors:
+    type: string
+    default_value: 'false'
+    title: Display Errors
+    optional: true
+    help_text:
+      schema_version: 1
+      properties:
+        advanced: true
+        help_text: For debugging purposes to display errors on the screen.
+        type: boolean
+  refresh_interval:
+    type: string
+    default_value: '15'
+    title: Refresh Interval
+    optional: true
+    help_text:
+      schema_version: 1
+      properties:
+        help_text: How often to refresh dashboard data, in seconds.
+        type: number
+  sentry_dsn:
+    type: secret
+    title: Sentry Client Key
+    optional: true
+    is_global: true
+    help_text: Sentry Client Key from Sentry SDK for error capturing.
+  user_group_name:
+    type: string
+    title: User Group Name
+    optional: true
+    help_text: Filter agent statuses to a specific Puzzel user group. Leave blank to show all agents.

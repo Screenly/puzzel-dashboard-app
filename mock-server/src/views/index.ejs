@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Puzzel Mock API</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <script src="/vendor/alpine/cdn.min.js" defer></script>
+  </head>
+  <body class="min-h-screen bg-neutral-950 p-8 text-white">
+    <h1 class="mb-2 text-3xl font-semibold">Puzzel Mock API</h1>
+    <p class="mb-8 text-neutral-400">
+      Fakes the Puzzel Contact Centre real-time endpoints. Point the Edge
+      App's <code>api_base_url</code> setting at
+      <code>http://localhost:3000</code> and set any non-empty
+      <code>access_token</code>.
+    </p>
+
+    <section class="mb-10">
+      <h2 class="mb-3 text-xl font-medium">Queues</h2>
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="border-b border-neutral-700 text-neutral-400">
+            <th class="py-2">Name</th>
+            <th class="py-2">Ready</th>
+            <th class="py-2">Logged On</th>
+            <th class="py-2">In Queue</th>
+            <th class="py-2">Offered</th>
+            <th class="py-2">Answered</th>
+            <th class="py-2">SLA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% queues.forEach((queue) => { %>
+          <tr class="border-b border-neutral-800">
+            <td class="py-2 font-medium"><%= queue.description %></td>
+            <td class="py-2"><%= queue.agentsReady %></td>
+            <td class="py-2"><%= queue.agentsLoggedOn %></td>
+            <td class="py-2"><%= queue.queueSize %></td>
+            <td class="py-2"><%= queue.callsOfferedToday %></td>
+            <td class="py-2"><%= queue.callsAnsweredToday %></td>
+            <td class="py-2"><%= queue.sla %>%</td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <p class="mt-2 text-sm text-neutral-500">
+        Numbers jitter automatically every 5 seconds. Reload this page to see
+        the latest values.
+      </p>
+    </section>
+
+    <section x-data="{ agents: <%- JSON.stringify(agents) %> }">
+      <h2 class="mb-3 text-xl font-medium">Agents</h2>
+      <div class="grid grid-cols-4 gap-3">
+        <template x-for="agent in agents" :key="agent.userId">
+          <button
+            type="button"
+            class="rounded-lg p-4 text-left transition"
+            :class="{
+              'bg-emerald-700': agent.contactCentreStatus === 'LoggedOn',
+              'bg-amber-700': agent.contactCentreStatus === 'Pause',
+              'bg-neutral-700': agent.contactCentreStatus === 'LoggedOff',
+            }"
+            @click="
+              fetch(`/admin/agents/${agent.userId}/cycle-status`, { method: 'POST' })
+                .then((res) => res.json())
+                .then((updated) => {
+                  agent.contactCentreStatus = updated.contactCentreStatus
+                })
+            "
+          >
+            <div
+              class="font-semibold"
+              x-text="`${agent.firstName} ${agent.lastName}`"
+            ></div>
+            <div class="text-sm opacity-80" x-text="agent.contactCentreStatus"></div>
+          </button>
+        </template>
+      </div>
+      <p class="mt-2 text-sm text-neutral-500">
+        Click a tile to cycle its status: Ready → Paused → Logged Off.
+      </p>
+    </section>
+  </body>
+</html>
