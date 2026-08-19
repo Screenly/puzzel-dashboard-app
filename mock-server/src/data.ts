@@ -11,6 +11,8 @@ export interface QueueStats {
   waitTimeAverageSeconds: number
   callsOfferedToday: number
   callsAnsweredToday: number
+  ciqsOfferedToday: number
+  ciqsAnsweredToday: number
   sla: number
 }
 
@@ -37,6 +39,8 @@ export const queues: QueueStats[] = [
     waitTimeAverageSeconds: 32,
     callsOfferedToday: 58,
     callsAnsweredToday: 54,
+    ciqsOfferedToday: 6,
+    ciqsAnsweredToday: 5,
     sla: 92,
   },
   {
@@ -50,6 +54,8 @@ export const queues: QueueStats[] = [
     waitTimeAverageSeconds: 18,
     callsOfferedToday: 21,
     callsAnsweredToday: 20,
+    ciqsOfferedToday: 3,
+    ciqsAnsweredToday: 3,
     sla: 98,
   },
   {
@@ -63,6 +69,8 @@ export const queues: QueueStats[] = [
     waitTimeAverageSeconds: 0,
     callsOfferedToday: 9,
     callsAnsweredToday: 9,
+    ciqsOfferedToday: 0,
+    ciqsAnsweredToday: 0,
     sla: 100,
   },
 ]
@@ -127,6 +135,11 @@ export function jitterData(): void {
     queue.callsAnsweredToday = Math.min(
       queue.callsOfferedToday,
       randomWalk(queue.callsAnsweredToday, 1),
+    )
+    queue.ciqsOfferedToday = randomWalk(queue.ciqsOfferedToday, 1)
+    queue.ciqsAnsweredToday = Math.min(
+      queue.ciqsOfferedToday,
+      randomWalk(queue.ciqsAnsweredToday, 1),
     )
   })
 }
