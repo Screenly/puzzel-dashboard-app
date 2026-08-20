@@ -12,15 +12,15 @@ settings:
     help_text: For testing only. Production support for Puzzel ID OAuth is not implemented yet.
   api_base_url:
     type: string
-    default_value: 'https://api.puzzel.com/ContactCentre5'
+    default_value: https://api.puzzel.com/ContactCentre5
     title: API Base URL
     optional: true
     help_text:
-      schema_version: 1
       properties:
         advanced: true
         help_text: Base URL of the Puzzel Contact Centre REST API. Override to point at a local mock server during development.
         type: url
+      schema_version: 1
   customer_key:
     type: string
     title: Customer Key
@@ -32,11 +32,11 @@ settings:
     title: Display Errors
     optional: true
     help_text:
-      schema_version: 1
       properties:
         advanced: true
         help_text: For debugging purposes to display errors on the screen.
         type: boolean
+      schema_version: 1
   override_locale:
     type: string
     default_value: en
@@ -57,16 +57,16 @@ settings:
     title: Refresh Interval
     optional: true
     help_text:
-      schema_version: 1
       properties:
         help_text: How often to refresh dashboard data, in seconds.
         type: number
+      schema_version: 1
   sentry_dsn:
     type: secret
     title: Sentry Client Key
     optional: true
-    is_global: true
     help_text: Sentry Client Key from Sentry SDK for error capturing.
+    is_global: true
   user_group_name:
     type: string
     title: User Group Name
