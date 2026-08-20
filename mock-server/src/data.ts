@@ -129,17 +129,17 @@ export function jitterData(): void {
     queue.waitTimeAverageSeconds = randomWalk(queue.waitTimeAverageSeconds, 5)
     queue.waitTimeMaxSeconds = Math.max(
       queue.waitTimeMaxSeconds,
-      queue.waitTimeAverageSeconds,
+      queue.waitTimeAverageSeconds
     )
     queue.callsOfferedToday = randomWalk(queue.callsOfferedToday, 1)
     queue.callsAnsweredToday = Math.min(
       queue.callsOfferedToday,
-      randomWalk(queue.callsAnsweredToday, 1),
+      randomWalk(queue.callsAnsweredToday, 1)
     )
     queue.ciqsOfferedToday = randomWalk(queue.ciqsOfferedToday, 1)
     queue.ciqsAnsweredToday = Math.min(
       queue.ciqsOfferedToday,
-      randomWalk(queue.ciqsAnsweredToday, 1),
+      randomWalk(queue.ciqsAnsweredToday, 1)
     )
   })
 }
@@ -149,7 +149,8 @@ export function cycleAgentStatus(userId: number): AgentStatus | undefined {
   const agent = agents.find((a) => a.userId === userId)
   if (!agent) return undefined
 
-  const nextIndex = (order.indexOf(agent.contactCentreStatus) + 1) % order.length
+  const nextIndex =
+    (order.indexOf(agent.contactCentreStatus) + 1) % order.length
   agent.contactCentreStatus = order[nextIndex]
   return agent
 }
