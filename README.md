@@ -36,17 +36,17 @@ screenly edge-app instance create
 
 Settings are defined in `screenly.yml` and mirrored in `screenly_qc.yml` (used for the QC/staging build).
 
-| Setting             | Description                                                                                                  | Required | Default                                 |
-| ------------------- | ------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------------- |
-| `access_token`      | For testing only. Production support for Puzzel ID OAuth is not implemented yet.                             | No       | —                                       |
-| `api_base_url`      | Base URL of the Puzzel Contact Centre REST API. Override to point at a local mock server during development. | No       | `https://api.puzzel.com/ContactCentre5` |
-| `customer_key`      | Your Puzzel customer number.                                                                                 | Yes      | —                                       |
-| `display_errors`    | For debugging purposes to display errors on the screen.                                                      | No       | `false`                                 |
-| `override_locale`   | Override the default locale with a supported language code (e.g., en_US, fr_FR, de_DE).                      | No       | `en`                                    |
-| `override_timezone` | Override the default timezone with a supported timezone identifier (e.g., Europe/London, America/New_York).  | No       | —                                       |
-| `refresh_interval`  | How often to refresh dashboard data, in seconds.                                                             | No       | `15`                                    |
-| `sentry_dsn`        | Sentry Client Key from Sentry SDK for error capturing.                                                       | No       | —                                       |
-| `user_group_name`   | Filter agent statuses to a specific Puzzel user group. Leave blank to show all agents.                       | No       | —                                       |
+| Setting             | Description                                                                                                 | Required | Default |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- | -------- | ------- |
+| `access_token`      | For testing only. Production support for Puzzel ID OAuth is not implemented yet.                            | No       | —       |
+| `customer_key`      | Your Puzzel customer number.                                                                                | Yes      | —       |
+| `display_errors`    | For debugging purposes to display errors on the screen.                                                     | No       | `false` |
+| `override_locale`   | Override the default locale with a supported language code (e.g., en_US, fr_FR, de_DE).                     | No       | `en`    |
+| `override_timezone` | Override the default timezone with a supported timezone identifier (e.g., Europe/London, America/New_York). | No       | —       |
+| `refresh_interval`  | How often to refresh dashboard data, in seconds.                                                            | No       | `15`    |
+| `sentry_dsn`        | Sentry Client Key from Sentry SDK for error capturing.                                                      | No       | —       |
+| `user_group_name`   | Filter agent statuses to a specific Puzzel user group. Leave blank to show all agents.                      | No       | —       |
+| `user_id`           | The Puzzel user ID associated with your OIDC client's Product Access. Required for API requests to succeed. | Yes      | —       |
 
 ## Screenshots
 

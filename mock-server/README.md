@@ -64,12 +64,15 @@ credentials, not from the incoming request.
 
 ## Connecting to the Edge App
 
-In `mock-data.yml` (at the repository root), set:
+The Edge App's Puzzel API base URL is hardcoded to the real Puzzel API and is
+no longer configurable via settings, so `/puzzel/...` is not wired into the
+running dashboard — use it for manual `curl`/browser checks instead. The
+`/screenly` broker can still be pointed at from `mock-data.yml` (at the
+repository root):
 
 ```yaml
 settings:
   access_token: 'mock-token'
-  api_base_url: 'http://localhost:3000/puzzel'
   customer_key: '12345'
   screenly_oauth_tokens_url: 'http://localhost:3000/screenly/'
   screenly_app_auth_token: 'mock-token'
