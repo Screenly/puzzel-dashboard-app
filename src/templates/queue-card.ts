@@ -1,25 +1,27 @@
 import { html, render, type TemplateResult } from 'lit-html'
 import type { QueueStats } from '../api'
-import { formatDuration, formatNumber } from './queue-card.lib'
+import { formatDuration } from './queue-card.lib'
 import { mountQueueChart } from './queue-chart'
 
 function queueCardTemplate(queue: QueueStats, locale: string): TemplateResult {
+  const number = new Intl.NumberFormat(locale)
+
   return html`
     <div class="queue-card">
       <h2 class="queue-card-title">${queue.description}</h2>
       <dl class="queue-card-stats">
         <dt>Ready</dt>
-        <dd>${formatNumber(queue.agentsReady, locale)}</dd>
+        <dd>${number.format(queue.agentsReady)}</dd>
         <dt>Logged On</dt>
-        <dd>${formatNumber(queue.agentsLoggedOn, locale)}</dd>
+        <dd>${number.format(queue.agentsLoggedOn)}</dd>
         <dt>In Queue</dt>
-        <dd>${formatNumber(queue.queueSize, locale)}</dd>
+        <dd>${number.format(queue.queueSize)}</dd>
         <dt>SLA</dt>
-        <dd>${formatNumber(queue.sla, locale)}%</dd>
+        <dd>${number.format(queue.sla)}%</dd>
         <dt>Offered</dt>
-        <dd>${formatNumber(queue.callsOfferedToday, locale)}</dd>
+        <dd>${number.format(queue.callsOfferedToday)}</dd>
         <dt>Answered</dt>
-        <dd>${formatNumber(queue.callsAnsweredToday, locale)}</dd>
+        <dd>${number.format(queue.callsAnsweredToday)}</dd>
         <dt>Avg Wait</dt>
         <dd>${formatDuration(queue.waitTimeAverageSeconds)}</dd>
         <dt>Max Wait</dt>
