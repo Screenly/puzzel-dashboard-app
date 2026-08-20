@@ -1,21 +1,50 @@
 import { getSettingWithDefault } from '@screenly/edge-apps'
+import {
+  readEdgeAppCache,
+  reportError,
+  writeEdgeAppCache,
+} from '@screenly/edge-apps/utils'
+import { CACHE_NAMESPACE } from './constants'
+
+type CachedCredentials = { accessToken: string }
 
 export async function fetchAccessToken(): Promise<string> {
   const devAccessToken = getSettingWithDefault<string>('access_token', '')
+  const displayErrors =
+    getSettingWithDefault<string>('display_errors', 'false') === 'true'
 
-  const response = await fetch(
-    `${screenly.settings.screenly_oauth_tokens_url}access_token/`,
-    {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${screenly.settings.screenly_app_auth_token}`,
+  try {
+    const response = await fetch(
+      `${screenly.settings.screenly_oauth_tokens_url}access_token/`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${screenly.settings.screenly_app_auth_token}`,
+        },
       },
-    },
-  ).catch(() => null)
-  if (!response?.ok) return devAccessToken
+    )
+    if (!response.ok) {
+      throw new Error(
+        `Screenly returned an unexpected error (${response.status}).`,
+      )
+    }
 
-  const body = (await response.json().catch(() => null)) as {
-    token?: string
-  } | null
-  return body?.token ?? devAccessToken
+    const body = (await response.json()) as { token?: string }
+    if (!body.token) throw new Error('No access token available.')
+
+    writeEdgeAppCache(CACHE_NAMESPACE, 'credentials', {
+      accessToken: body.token,
+    })
+    return body.token
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err))
+    reportError(error, { source: 'puzzel-credentials' })
+    if (displayErrors) throw error
+
+    const cached = readEdgeAppCache<CachedCredentials>(
+      CACHE_NAMESPACE,
+      'credentials',
+    )
+    return cached?.accessToken ?? devAccessToken
+  }
 }
