@@ -4,17 +4,12 @@ import { mountQueueCards } from './queue-card'
 
 export type DashboardData = { queues: QueueStats[]; agents: AgentStatus[] }
 
-function showDashboard(): void {
-  const el = document.getElementById('dashboard')
-  if (el) el.style.display = 'flex'
-}
+export function renderDashboard(data: DashboardData, locale: string): void {
+  const queueContainer = document.getElementById('queue-cards')!
+  const agentContainer = document.getElementById('agent-tiles')!
+  const dashboard = document.getElementById('dashboard')!
 
-export function renderDashboard(data: DashboardData): void {
-  const queueContainer = document.getElementById('queue-cards')
-  const agentContainer = document.getElementById('agent-tiles')
-
-  if (queueContainer) mountQueueCards(queueContainer, data.queues)
-  if (agentContainer) mountAgentTiles(agentContainer, data.agents)
-
-  showDashboard()
+  mountQueueCards(queueContainer, data.queues, locale)
+  mountAgentTiles(agentContainer, data.agents)
+  dashboard.style.display = 'flex'
 }

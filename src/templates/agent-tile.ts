@@ -1,25 +1,6 @@
 import { html, render, type TemplateResult } from 'lit-html'
 import type { AgentStatus } from '../api'
-
-const AGENT_STATUS_LABELS: Record<string, string> = {
-  LoggedOff: 'Logged Off',
-  LoggedOn: 'Ready',
-  Pause: 'Paused',
-}
-
-const AGENT_STATUS_COLORS: Record<string, string> = {
-  LoggedOff: 'bg-neutral-600',
-  LoggedOn: 'bg-emerald-600',
-  Pause: 'bg-amber-600',
-}
-
-function agentStatusLabel(status: string): string {
-  return AGENT_STATUS_LABELS[status] ?? status
-}
-
-function agentStatusColor(status: string): string {
-  return AGENT_STATUS_COLORS[status] ?? 'bg-neutral-600'
-}
+import { agentStatusColor, agentStatusLabel } from './agent-tile.lib'
 
 function agentTileTemplate(agent: AgentStatus): TemplateResult {
   return html`
