@@ -4,9 +4,10 @@ Puzzel Dashboard App - Screenly Edge App
 
 ## Getting Started
 
-Install dependencies:
+Clone the repository and install dependencies:
 
 ```bash
+gh repo clone Screenly/puzzel-dashboard-app -- --recurse-submodules
 bun install
 ```
 
