@@ -12,11 +12,14 @@
       reference-height="1080"
       orientation="auto"
     >
-      <div id="app" class="flex h-full w-full flex-col bg-neutral-900 text-white">
-        <app-header show-date></app-header>
+      <div
+        id="app"
+        class="flex h-full w-full flex-col bg-neutral-900 px-12 py-7 text-white portrait:px-8 portrait:py-7"
+      >
+        <app-header class="bg-neutral-800 [zoom:1.4]" show-date></app-header>
         <main
           id="dashboard"
-          class="flex flex-1 flex-col gap-6 overflow-hidden p-6 portrait:p-4"
+          class="flex flex-1 flex-col gap-6 overflow-hidden py-6 portrait:py-4"
           style="display: none"
         >
           <section
@@ -28,13 +31,6 @@
             class="grid flex-1 grid-cols-6 gap-3 overflow-hidden portrait:grid-cols-3"
           ></section>
         </main>
-        <div
-          id="error-screen"
-          class="flex flex-1 items-center justify-center p-8 text-center"
-          style="display: none"
-        >
-          <p id="error-message" class="text-3xl portrait:text-xl"></p>
-        </div>
       </div>
     </auto-scaler>
     <script type="module" src="/src/main.ts"></script>
