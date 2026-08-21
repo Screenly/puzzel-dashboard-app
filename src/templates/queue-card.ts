@@ -32,7 +32,7 @@ function queueCardTemplate(queue: QueueStats, locale: string): TemplateResult {
   `
 }
 
-export function mountQueueCards(
+function renderCards(
   container: HTMLElement,
   queues: QueueStats[],
   locale: string,
@@ -45,5 +45,29 @@ export function mountQueueCards(
   for (const queue of queues) {
     const chartContainer = document.getElementById(`queue-chart-${queue.id}`)
     if (chartContainer) mountQueueChart(chartContainer, queue)
+  }
+}
+
+function countFittingCards(container: HTMLElement): number {
+  const cards = Array.from(container.children) as HTMLElement[]
+  const bottomLimit = container.parentElement?.getBoundingClientRect().bottom
+
+  if (bottomLimit === undefined) return cards.length
+
+  return cards.filter(
+    (card) => card.getBoundingClientRect().bottom <= bottomLimit,
+  ).length
+}
+
+export function mountQueueCards(
+  container: HTMLElement,
+  queues: QueueStats[],
+  locale: string,
+): void {
+  renderCards(container, queues, locale)
+
+  const fittingCount = countFittingCards(container)
+  if (fittingCount < queues.length) {
+    renderCards(container, queues.slice(0, fittingCount), locale)
   }
 }
