@@ -14,21 +14,21 @@
     >
       <div
         id="app"
-        class="flex h-full w-full flex-col bg-neutral-900 px-12 py-7 text-white portrait:px-8 portrait:py-7"
+        class="flex h-full w-full flex-col gap-8 bg-neutral-900 px-12 py-7 text-white portrait:px-8 portrait:py-7"
       >
         <app-header class="bg-neutral-800 [zoom:1.4]" show-date></app-header>
         <main
           id="dashboard"
-          class="flex flex-1 flex-col gap-6 overflow-hidden py-6 portrait:py-4"
+          class="flex flex-1 flex-col gap-8 overflow-hidden"
           style="display: none"
         >
           <section
             id="queue-cards"
-            class="grid grid-cols-3 gap-4 portrait:grid-cols-1"
+            class="grid min-h-0 flex-[3] auto-rows-fr grid-cols-3 gap-8 overflow-hidden portrait:grid-cols-1 [&>:nth-child(n+3)]:portrait:hidden"
           ></section>
           <section
             id="agent-tiles"
-            class="grid flex-1 grid-cols-6 gap-3 overflow-hidden portrait:grid-cols-3"
+            class="grid min-h-0 flex-1 auto-rows-fr grid-cols-6 gap-8 overflow-hidden portrait:flex-[0.6] portrait:grid-cols-2 [&>:nth-child(n+5)]:portrait:hidden"
           ></section>
         </main>
       </div>

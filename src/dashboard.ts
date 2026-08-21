@@ -41,12 +41,12 @@ async function getDashboardData(): Promise<DashboardData> {
   return cached
 }
 
-export async function refresh(locale: string): Promise<void> {
+export async function refresh(): Promise<void> {
   const customerKey = getSettingWithDefault<string>('customer_key', '')
   const userId = getSettingWithDefault<string>('user_id', '')
   if (!customerKey) throw new Error('Please set a Customer Key in settings.')
   if (!userId) throw new Error('Please set a User ID in settings.')
 
   const data = await getDashboardData()
-  renderDashboard(data, locale)
+  renderDashboard(data)
 }
