@@ -1,0 +1,15 @@
+import type { AgentStatus, QueueStats } from '../api'
+import { mountAgentTiles } from './agent-tile'
+import { mountQueueCards } from './queue-card'
+
+export type DashboardData = { queues: QueueStats[]; agents: AgentStatus[] }
+
+export function renderDashboard(data: DashboardData, locale: string): void {
+  const queueContainer = document.getElementById('queue-cards')!
+  const agentContainer = document.getElementById('agent-tiles')!
+  const dashboard = document.getElementById('dashboard')!
+
+  mountQueueCards(queueContainer, data.queues, locale)
+  mountAgentTiles(agentContainer, data.agents)
+  dashboard.style.display = 'flex'
+}
