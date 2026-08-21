@@ -9,7 +9,7 @@ export function renderDashboard(data: DashboardData, locale: string): void {
   const agentContainer = document.getElementById('agent-tiles')!
   const dashboard = document.getElementById('dashboard')!
 
+  dashboard.style.display = 'flex'
   mountQueueCards(queueContainer, data.queues, locale)
   mountAgentTiles(agentContainer, data.agents)
-  dashboard.style.display = 'flex'
 }

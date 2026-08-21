@@ -20,15 +20,15 @@
 
 @layer components {
   .queue-card {
-    @apply flex flex-col gap-2 rounded-xl bg-neutral-800 p-4;
+    @apply flex flex-col gap-3 rounded-xl bg-neutral-800 p-5;
   }
 
   .queue-card-title {
-    @apply text-xl font-semibold;
+    @apply text-5xl font-semibold;
   }
 
   .queue-card-stats {
-    @apply grid grid-cols-2 gap-x-4 gap-y-1.5 text-base;
+    @apply grid grid-cols-2 gap-x-4 gap-y-2 text-2xl;
   }
 
   .queue-card-stats dt {
@@ -40,7 +40,7 @@
   }
 
   .queue-card-chart {
-    @apply mt-1 h-24;
+    @apply mt-1 h-32;
   }
 
   .agent-tile {
@@ -48,10 +48,10 @@
   }
 
   .agent-tile-name {
-    @apply text-lg font-semibold;
+    @apply text-3xl font-semibold;
   }
 
   .agent-tile-status {
-    @apply text-sm uppercase tracking-wide opacity-90;
+    @apply text-2xl uppercase tracking-wide opacity-90;
   }
 }

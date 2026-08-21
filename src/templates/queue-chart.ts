@@ -37,8 +37,14 @@ export function mountQueueChart(
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: '#ffffff' }, grid: { display: false } },
-        y: { ticks: { color: '#ffffff' }, grid: { color: '#ffffff22' } },
+        x: {
+          ticks: { color: '#ffffff', font: { size: 24 } },
+          grid: { display: false },
+        },
+        y: {
+          ticks: { color: '#ffffff', font: { size: 24 } },
+          grid: { color: '#ffffff22' },
+        },
       },
     },
   })
