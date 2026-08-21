@@ -34,6 +34,15 @@ bun run deploy
 screenly edge-app instance create
 ```
 
+Then set the settings needed for the dashboard to show live data (see [Configuration](#configuration) for the full list):
+
+```bash
+screenly edge-app setting set customer_key=<your Puzzel tenant ID>
+screenly edge-app setting set user_id=<your Puzzel user ID>
+screenly edge-app setting set client_id=<your Puzzel OIDC client ID>
+screenly edge-app setting set client_secret=<your Puzzel OIDC client secret>
+```
+
 ## Configuration
 
 Settings are defined in `screenly.yml` and mirrored in `screenly_qc.yml` (used for the QC/staging build).
@@ -41,6 +50,8 @@ Settings are defined in `screenly.yml` and mirrored in `screenly_qc.yml` (used f
 | Setting             | Description                                                                                                 | Required | Default |
 | ------------------- | ----------------------------------------------------------------------------------------------------------- | -------- | ------- |
 | `access_token`      | For testing only. Production support for Puzzel ID OAuth is not implemented yet.                            | No       | —       |
+| `client_id`         | Your Puzzel OIDC client ID. For demo use only, until a Screenly OAuth broker for Puzzel exists.             | No       | —       |
+| `client_secret`     | Your Puzzel OIDC client secret. For demo use only, until a Screenly OAuth broker for Puzzel exists.         | No       | —       |
 | `customer_key`      | Your Puzzel customer number.                                                                                | Yes      | —       |
 | `display_errors`    | For debugging purposes to display errors on the screen.                                                     | No       | `false` |
 | `override_locale`   | Override the default locale with a supported language code (e.g., en_US, fr_FR, de_DE).                     | No       | `en`    |
