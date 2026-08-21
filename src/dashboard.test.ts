@@ -23,8 +23,6 @@ const BASE_SETTINGS = {
   display_errors: 'false',
 }
 
-const LOCALE = 'en'
-
 // eslint-disable-next-line max-lines-per-function
 describe('refresh', () => {
   beforeEach(() => {
@@ -49,7 +47,7 @@ describe('refresh', () => {
   test('throws when customer_key is missing', async () => {
     setupScreenlyMock({}, { ...BASE_SETTINGS, customer_key: '' })
 
-    await expect(refresh(LOCALE)).rejects.toThrow(
+    await expect(refresh()).rejects.toThrow(
       'Please set a Customer Key in settings.',
     )
   })
@@ -57,13 +55,11 @@ describe('refresh', () => {
   test('throws when user_id is missing', async () => {
     setupScreenlyMock({}, { ...BASE_SETTINGS, user_id: '' })
 
-    await expect(refresh(LOCALE)).rejects.toThrow(
-      'Please set a User ID in settings.',
-    )
+    await expect(refresh()).rejects.toThrow('Please set a User ID in settings.')
   })
 
   test('writes fetched data to cache and renders it on success', async () => {
-    await refresh(LOCALE)
+    await refresh()
 
     const data = {
       queues: [{ id: 1, description: 'Support' }],
@@ -74,7 +70,7 @@ describe('refresh', () => {
       'dashboard-data',
       data,
     )
-    expect(renderDashboard).toHaveBeenCalledWith(data, LOCALE)
+    expect(renderDashboard).toHaveBeenCalledWith(data)
   })
 
   test('rethrows and skips the cache when display_errors is on', async () => {
@@ -84,7 +80,7 @@ describe('refresh', () => {
     })
     readEdgeAppCache.mockReturnValue({ queues: [], agents: [] })
 
-    await expect(refresh(LOCALE)).rejects.toThrow('down')
+    await expect(refresh()).rejects.toThrow('down')
 
     expect(readEdgeAppCache).not.toHaveBeenCalled()
     expect(renderDashboard).not.toHaveBeenCalled()
@@ -100,9 +96,9 @@ describe('refresh', () => {
     }
     readEdgeAppCache.mockReturnValue(cached)
 
-    await refresh(LOCALE)
+    await refresh()
 
-    expect(renderDashboard).toHaveBeenCalledWith(cached, LOCALE)
+    expect(renderDashboard).toHaveBeenCalledWith(cached)
     expect(reportError).toHaveBeenCalledWith(
       new Error('down'),
       expect.objectContaining({
@@ -118,9 +114,7 @@ describe('refresh', () => {
     })
     readEdgeAppCache.mockReturnValue(null)
 
-    await expect(refresh(LOCALE)).rejects.toThrow(
-      'No cached dashboard data found.',
-    )
+    await expect(refresh()).rejects.toThrow('No cached dashboard data found.')
     expect(renderDashboard).not.toHaveBeenCalled()
   })
 })
