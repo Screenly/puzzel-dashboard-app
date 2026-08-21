@@ -1,5 +1,6 @@
 ---
 syntax: manifest_v1
+id: 01M0JSRMTH97BP08CQ8Q2ZGNQ3
 description: Display real-time Puzzel Contact Centre queue and agent stats on your Screenly digital signage screens
 categories:
   - Dashboards
@@ -10,6 +11,16 @@ settings:
     title: Access Token
     optional: true
     help_text: For testing only. Production support for Puzzel ID OAuth is not implemented yet.
+  client_id:
+    type: string
+    title: Client ID
+    optional: true
+    help_text: Your Puzzel OIDC client ID. For demo use only, until a Screenly OAuth broker for Puzzel exists.
+  client_secret:
+    type: secret
+    title: Client Secret
+    optional: true
+    help_text: Your Puzzel OIDC client secret. For demo use only, until a Screenly OAuth broker for Puzzel exists.
   customer_key:
     type: string
     title: Customer Key

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 <slug> <display-name>" >&2
+  echo "Example: $0 customer-a 'Customer A'" >&2
+  exit 1
+fi
+
+missing=()
+for var in PUZZEL_CUSTOMER_KEY PUZZEL_USER_ID PUZZEL_CLIENT_KEY PUZZEL_CLIENT_SECRET; do
+  if [ -z "${!var:-}" ]; then
+    missing+=("${var}")
+  fi
+done
+
+if [ ${#missing[@]} -gt 0 ]; then
+  echo "Missing required environment variable(s): ${missing[*]}" >&2
+  exit 1
+fi
+
+slug="$1"
+name="$2"
+dir="instances/${slug}"
+
+mkdir -p "${dir}"
+
+if [ ! -e "${dir}/screenly.yml" ]; then
+  ln -s "../../screenly.yml" "${dir}/screenly.yml"
+fi
+
+screenly edge-app instance create --name="${name}" -p "${dir}"
+
+screenly edge-app setting set "customer_key=${PUZZEL_CUSTOMER_KEY}" -p "${dir}"
+screenly edge-app setting set "user_id=${PUZZEL_USER_ID}" -p "${dir}"
+screenly edge-app setting set "client_id=${PUZZEL_CLIENT_KEY}" -p "${dir}"
+screenly edge-app setting set "client_secret=${PUZZEL_CLIENT_SECRET}" -p "${dir}"
+
+echo
+echo "Instance created and configured in ${dir}/."
