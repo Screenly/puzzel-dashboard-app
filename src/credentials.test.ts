@@ -13,7 +13,7 @@ import * as utils from '@screenly/edge-apps/utils'
 import { fetchAccessToken } from './credentials'
 
 const BASE_SETTINGS = {
-  access_token: 'dev-token',
+  access_token: '',
   display_errors: 'false',
   screenly_oauth_tokens_url: 'https://api.example.com/oauth/',
   screenly_app_auth_token: 'app-auth',
@@ -39,6 +39,7 @@ function fakeResponse(status: number, body: unknown) {
   }))
 }
 
+// eslint-disable-next-line max-lines-per-function
 describe('fetchAccessToken', () => {
   beforeEach(() => {
     setupScreenlyMock({}, BASE_SETTINGS)
@@ -50,6 +51,18 @@ describe('fetchAccessToken', () => {
   afterEach(() => {
     globalThis.fetch = originalFetch
     resetScreenlyMock()
+  })
+
+  test('returns the access_token setting immediately without calling the broker', async () => {
+    setupScreenlyMock({}, { ...BASE_SETTINGS, access_token: 'dev-token' })
+    const fetchMock = stubFetch(async () => {
+      throw new Error('should not be called')
+    })
+
+    const token = await fetchAccessToken()
+
+    expect(token).toBe('dev-token')
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   test('returns the fetched token and writes it to cache on success', async () => {
@@ -101,7 +114,7 @@ describe('fetchAccessToken', () => {
     expect(reportError).toHaveBeenCalledTimes(1)
   })
 
-  test('falls back to the access_token setting when there is no cache', async () => {
+  test('falls back to an empty string when there is no cache and no dev token', async () => {
     readEdgeAppCache.mockReturnValue(null)
     stubFetch(async () => {
       throw new Error('network down')
@@ -109,7 +122,7 @@ describe('fetchAccessToken', () => {
 
     const token = await fetchAccessToken()
 
-    expect(token).toBe('dev-token')
+    expect(token).toBe('')
   })
 
   test('falls back when the backend responds without a token', async () => {
@@ -117,7 +130,7 @@ describe('fetchAccessToken', () => {
 
     const token = await fetchAccessToken()
 
-    expect(token).toBe('dev-token')
+    expect(token).toBe('')
     expect(reportError).toHaveBeenCalledTimes(1)
   })
 
@@ -126,7 +139,7 @@ describe('fetchAccessToken', () => {
 
     const token = await fetchAccessToken()
 
-    expect(token).toBe('dev-token')
+    expect(token).toBe('')
     expect(reportError).toHaveBeenCalledTimes(1)
   })
 })

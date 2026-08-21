@@ -10,6 +10,8 @@ type CachedCredentials = { accessToken: string }
 
 export async function fetchAccessToken(): Promise<string> {
   const devAccessToken = getSettingWithDefault<string>('access_token', '')
+  if (devAccessToken) return devAccessToken
+
   const displayErrors =
     getSettingWithDefault<string>('display_errors', 'false') === 'true'
 
@@ -45,6 +47,6 @@ export async function fetchAccessToken(): Promise<string> {
       CACHE_NAMESPACE,
       'credentials',
     )
-    return cached?.accessToken ?? devAccessToken
+    return cached?.accessToken ?? ''
   }
 }
