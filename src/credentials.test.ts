@@ -83,11 +83,30 @@ describe('fetchAccessToken', () => {
 
     await fetchAccessToken()
 
-    expect(fetchMock).toHaveBeenCalledWith(
+    const [requestUrl, init] = fetchMock.mock.calls[0] as [URL, RequestInit]
+    expect(requestUrl.toString()).toBe(
       'https://api.example.com/oauth/access_token/',
-      expect.objectContaining({
-        headers: expect.objectContaining({ Authorization: 'Bearer app-auth' }),
-      }),
+    )
+    expect(init.headers).toEqual(
+      expect.objectContaining({ Authorization: 'Bearer app-auth' }),
+    )
+  })
+
+  test('builds the correct url when screenly_oauth_tokens_url has no trailing slash', async () => {
+    setupScreenlyMock(
+      {},
+      {
+        ...BASE_SETTINGS,
+        screenly_oauth_tokens_url: 'https://api.example.com/oauth',
+      },
+    )
+    const fetchMock = fakeResponse(200, { token: 'live-token' })
+
+    await fetchAccessToken()
+
+    const [requestUrl] = fetchMock.mock.calls[0] as [URL]
+    expect(requestUrl.toString()).toBe(
+      'https://api.example.com/oauth/access_token/',
     )
   })
 
