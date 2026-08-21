@@ -23,11 +23,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   await refresh(locale)
   signalReady()
 
-  setInterval(async () => {
-    try {
-      await refresh(locale)
-    } catch (err) {
-      console.error('Refresh failed:', err)
-    }
-  }, refreshInterval * 1000)
+  setInterval(() => refresh(locale), refreshInterval * 1000)
 })
