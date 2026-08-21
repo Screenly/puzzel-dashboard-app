@@ -8,6 +8,7 @@ Clone the repository and install dependencies:
 
 ```bash
 gh repo clone Screenly/puzzel-dashboard-app -- --recurse-submodules
+cd puzzel-dashboard-app
 bun install
 ```
 
