@@ -10,19 +10,23 @@ type CachedCredentials = { accessToken: string }
 
 export async function fetchAccessToken(): Promise<string> {
   const devAccessToken = getSettingWithDefault<string>('access_token', '')
+  if (devAccessToken) return devAccessToken
+
   const displayErrors =
     getSettingWithDefault<string>('display_errors', 'false') === 'true'
 
   try {
-    const response = await fetch(
-      `${screenly.settings.screenly_oauth_tokens_url}access_token/`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${screenly.settings.screenly_app_auth_token}`,
-        },
-      },
+    const oauthTokensUrl = String(screenly.settings.screenly_oauth_tokens_url)
+    const url = new URL(
+      'access_token/',
+      oauthTokensUrl.endsWith('/') ? oauthTokensUrl : `${oauthTokensUrl}/`,
     )
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${screenly.settings.screenly_app_auth_token}`,
+      },
+    })
     if (!response.ok) {
       throw new Error(
         `Screenly returned an unexpected error (${response.status}).`,
@@ -45,6 +49,6 @@ export async function fetchAccessToken(): Promise<string> {
       CACHE_NAMESPACE,
       'credentials',
     )
-    return cached?.accessToken ?? devAccessToken
+    return cached?.accessToken ?? ''
   }
 }

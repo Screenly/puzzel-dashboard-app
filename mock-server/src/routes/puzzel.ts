@@ -1,6 +1,5 @@
 import { Router, type NextFunction, type Request, type Response } from 'express'
 import { PUZZEL_API_BASE_URL } from '../constants'
-import { agents, queues } from '../data'
 import { getConnection } from '../oauth'
 
 function requireBearerToken(
@@ -16,24 +15,33 @@ function requireBearerToken(
   next()
 }
 
-async function proxyToRealPuzzel(
+async function callPuzzel(
   path: string,
   query: Record<string, string>,
   res: Response
-): Promise<boolean> {
+): Promise<void> {
   const connection = getConnection()
-  if (!connection) return false
+  if (!connection) {
+    res.status(404).json({ error: 'Not connected. Visit / to connect.' })
+    return
+  }
 
   const params = new URLSearchParams(query)
   params.set('userId', connection.userId)
   const url = `${PUZZEL_API_BASE_URL}/${connection.tenantId}${path}?${params}`
 
-  const upstream = await fetch(url, {
-    headers: { Authorization: `Bearer ${connection.token}` },
-  })
-  const body = await upstream.text()
-  res.status(upstream.status).type('application/json').send(body)
-  return true
+  try {
+    const upstream = await fetch(url, {
+      headers: { Authorization: `Bearer ${connection.token}` },
+    })
+    const body = await upstream.text()
+    res.status(upstream.status).type('application/json').send(body)
+  } catch (err) {
+    res.status(502).json({
+      error: 'Failed to reach Puzzel.',
+      message: err instanceof Error ? err.message : String(err),
+    })
+  }
 }
 
 export const puzzelRouter = Router()
@@ -44,14 +52,11 @@ puzzelRouter.use(requireBearerToken)
 puzzelRouter.get(
   '/:customerKey/visualqueues/stateinformation/:result',
   async (req, res) => {
-    const proxied = await proxyToRealPuzzel(
+    await callPuzzel(
       `/visualqueues/stateinformation/${req.params.result}`,
       {},
       res
     )
-    if (proxied) return
-
-    res.json({ result: queues, code: 0, id: 'mock', message: 'OK' })
   }
 )
 
@@ -61,26 +66,15 @@ puzzelRouter.get(
   async (req, res) => {
     const { userGroupName } = req.query
 
-    const proxied = await proxyToRealPuzzel(
+    await callPuzzel(
       `/users/stateinformation/${req.params.tickerPeriodWindow}`,
       typeof userGroupName === 'string' ? { userGroupName } : {},
       res
     )
-    if (proxied) return
-
-    const filtered =
-      typeof userGroupName === 'string' && userGroupName
-        ? agents.filter((agent) => agent.userGroupName === userGroupName)
-        : agents
-    res.json({ result: filtered, code: 0, id: 'mock', message: 'OK' })
   }
 )
 
 // Mirrors VisualQueueList: GET /{customerKey}/visualqueues
 puzzelRouter.get('/:customerKey/visualqueues', async (_req, res) => {
-  const proxied = await proxyToRealPuzzel('/visualqueues', {}, res)
-  if (proxied) return
-
-  const result = queues.map(({ id, description }) => ({ id, description }))
-  res.json({ result, code: 0, id: 'mock', message: 'OK' })
+  await callPuzzel('/visualqueues', {}, res)
 })
