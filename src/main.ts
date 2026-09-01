@@ -11,7 +11,10 @@ import {
 import { createErrorReporter, showError } from './app'
 import { withFreshToken } from './auth'
 import type { RuntimeState } from './auth'
-import { DEFAULT_API_BASE_URL, DEFAULT_REFRESH_INTERVAL_SECONDS } from './constants'
+import {
+  DEFAULT_API_BASE_URL,
+  DEFAULT_REFRESH_INTERVAL_SECONDS,
+} from './constants'
 import { fetchDashboardData, renderDashboard } from './render'
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -65,15 +68,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getRuntimeState = (): RuntimeState => ({ accessToken, credentialError })
 
   const run = () =>
-    withFreshToken(getRuntimeState, refreshToken, reportError, async (token) => {
-      const data = await fetchDashboardData(
-        token,
-        baseUrl,
-        customerKey,
-        userGroupName,
-      )
-      renderDashboard(data)
-    })
+    withFreshToken(
+      getRuntimeState,
+      refreshToken,
+      reportError,
+      async (token) => {
+        const data = await fetchDashboardData(
+          token,
+          baseUrl,
+          customerKey,
+          userGroupName,
+        )
+        renderDashboard(data)
+      },
+    )
 
   await run()
   signalReady()

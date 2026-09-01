@@ -50,7 +50,9 @@ export async function fetchQueueStats(
 
   throwIfAuthError(res)
   if (!res.ok)
-    throw new Error(`Failed to fetch queue stats: ${res.status} ${res.statusText}`)
+    throw new Error(
+      `Failed to fetch queue stats: ${res.status} ${res.statusText}`,
+    )
 
   const data = (await res.json()) as { result: QueueStats[] }
   return data.result
