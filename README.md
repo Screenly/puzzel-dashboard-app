@@ -1,4 +1,8 @@
+[![Version](https://img.shields.io/github/v/release/Screenly/puzzel-dashboard-app)](https://github.com/Screenly/puzzel-dashboard-app/releases/latest)
+
 # Puzzel Dashboard App
+
+![Puzzel Dashboard App Preview](/screenshots/dashboard-1920x1080.webp)
 
 Puzzel Dashboard App - Screenly Edge App
 
