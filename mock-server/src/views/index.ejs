@@ -2,84 +2,127 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Puzzel Mock API</title>
     <link rel="stylesheet" href="/css/main.css" />
     <script src="/vendor/alpine/cdn.min.js" defer></script>
   </head>
-  <body class="min-h-screen bg-neutral-950 p-8 text-white">
-    <h1 class="mb-2 text-3xl font-semibold">Puzzel Mock API</h1>
-    <p class="mb-8 text-neutral-400">
-      Fakes the Puzzel Contact Centre real-time endpoints. Point the Edge
-      App's <code>api_base_url</code> setting at
-      <code>http://localhost:3000</code> and set any non-empty
-      <code>access_token</code>.
-    </p>
-
-    <section class="mb-10">
-      <h2 class="mb-3 text-xl font-medium">Queues</h2>
-      <table class="w-full border-collapse text-left">
-        <thead>
-          <tr class="border-b border-neutral-700 text-neutral-400">
-            <th class="py-2">Name</th>
-            <th class="py-2">Ready</th>
-            <th class="py-2">Logged On</th>
-            <th class="py-2">In Queue</th>
-            <th class="py-2">Offered</th>
-            <th class="py-2">Answered</th>
-            <th class="py-2">SLA</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% queues.forEach((queue) => { %>
-          <tr class="border-b border-neutral-800">
-            <td class="py-2 font-medium"><%= queue.description %></td>
-            <td class="py-2"><%= queue.agentsReady %></td>
-            <td class="py-2"><%= queue.agentsLoggedOn %></td>
-            <td class="py-2"><%= queue.queueSize %></td>
-            <td class="py-2"><%= queue.callsOfferedToday %></td>
-            <td class="py-2"><%= queue.callsAnsweredToday %></td>
-            <td class="py-2"><%= queue.sla %>%</td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
-      <p class="mt-2 text-sm text-neutral-500">
-        Numbers jitter automatically every 5 seconds. Reload this page to see
-        the latest values.
-      </p>
-    </section>
-
-    <section x-data="{ agents: <%- JSON.stringify(agents) %> }">
-      <h2 class="mb-3 text-xl font-medium">Agents</h2>
-      <div class="grid grid-cols-4 gap-3">
-        <template x-for="agent in agents" :key="agent.userId">
-          <button
-            type="button"
-            class="rounded-lg p-4 text-left transition"
-            :class="{
-              'bg-emerald-700': agent.contactCentreStatus === 'LoggedOn',
-              'bg-amber-700': agent.contactCentreStatus === 'Pause',
-              'bg-neutral-700': agent.contactCentreStatus === 'LoggedOff',
-            }"
-            @click="
-              fetch(`/admin/agents/${agent.userId}/cycle-status`, { method: 'POST' })
-                .then((res) => res.json())
-                .then((updated) => {
-                  agent.contactCentreStatus = updated.contactCentreStatus
-                })
-            "
-          >
-            <div
-              class="font-semibold"
-              x-text="`${agent.firstName} ${agent.lastName}`"
-            ></div>
-            <div class="text-sm opacity-80" x-text="agent.contactCentreStatus"></div>
-          </button>
-        </template>
+  <body
+    class="flex min-h-screen items-center justify-center bg-[#0a0a1a] p-8 font-sans text-[#e0e0e0]"
+  >
+    <% if (connection) { %>
+    <div
+      class="flex w-full max-w-4xl flex-row overflow-hidden rounded-3xl border border-white/20 text-white"
+      x-data="{ copied: false }"
+    >
+      <div
+        class="flex w-80 flex-none flex-col justify-center gap-4 border-r border-white/20 bg-[#ff5a1f]/10 px-10 py-12"
+      >
+        <h1 class="m-0 text-4xl leading-tight font-bold text-white">
+          Connected to<br />Puzzel
+        </h1>
+        <p class="m-0 leading-relaxed text-white/85">
+          Real queue and agent data is now proxied for the Edge App.
+        </p>
+        <span
+          class="self-start rounded-full bg-[#00a389] px-3 py-1 text-xs font-semibold tracking-widest text-white uppercase"
+          >&#10003; Authenticated</span
+        >
       </div>
-      <p class="mt-2 text-sm text-neutral-500">
-        Click a tile to cycle its status: Ready → Paused → Logged Off.
-      </p>
-    </section>
+
+      <div class="flex min-w-0 flex-1 flex-col justify-center gap-5 px-10 py-12">
+        <div class="mb-5">
+          <div class="mb-1.5 text-xs tracking-widest text-white/45 uppercase">
+            Tenant ID
+          </div>
+          <div
+            class="rounded-lg border border-white/10 bg-white/5 py-2.5 pr-3 pl-3 font-mono text-xs text-[#ffb088]"
+          >
+            <%= connection.tenantId %>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <div class="mb-1.5 text-xs tracking-widest text-white/45 uppercase">
+            User ID
+          </div>
+          <div
+            class="rounded-lg border border-white/10 bg-white/5 py-2.5 pr-3 pl-3 font-mono text-xs text-[#ffb088]"
+          >
+            <%= connection.userId %>
+          </div>
+        </div>
+
+        <div class="relative mb-5 min-w-0">
+          <div class="mb-1.5 text-xs tracking-widest text-white/45 uppercase">
+            Access Token
+          </div>
+          <div
+            class="truncate rounded-lg border border-white/10 bg-white/5 py-2.5 pr-10 pl-3 font-mono text-xs text-[#ffb088]"
+          >
+            <%= connection.token %>
+          </div>
+          <button
+            class="absolute top-7 right-2 cursor-pointer border-0 bg-transparent p-0.5 text-base leading-none text-white/40 hover:text-white"
+            title="Copy"
+            @click="navigator.clipboard.writeText(<%- JSON.stringify(connection.token) %>); copied = true"
+          >
+            &#128203;
+          </button>
+          <span x-show="copied" x-transition class="ml-2 text-xs text-[#00c9a7]"
+            >Copied!</span
+          >
+        </div>
+
+        <hr class="my-2 border-0 border-t border-white/10" />
+
+        <form method="POST" action="/disconnect" class="m-0">
+          <button
+            type="submit"
+            class="cursor-pointer rounded-lg border border-[#ff5050]/30 bg-[#ff5050]/15 px-5 py-2.5 text-sm font-semibold text-[#ff6b6b] hover:bg-[#ff5050]/25"
+          >
+            Disconnect
+          </button>
+        </form>
+      </div>
+    </div>
+    <% } else { %>
+    <div
+      class="flex w-full max-w-4xl flex-row overflow-hidden rounded-3xl border border-white/20 text-white"
+    >
+      <div
+        class="flex w-80 flex-none flex-col justify-center gap-4 border-r border-white/20 bg-[#ff5a1f]/10 px-10 py-12"
+      >
+        <h1 class="m-0 text-4xl leading-tight font-bold text-white">
+          Connect to<br />Puzzel
+        </h1>
+        <p class="m-0 leading-relaxed text-white/85">
+          Exchange real credentials for a Puzzel ID access token, so the Edge
+          App can be developed against real queue and agent data.
+        </p>
+      </div>
+
+      <div class="flex min-w-0 flex-1 flex-col justify-center gap-5 px-10 py-12">
+        <% if (error) { %>
+        <p class="m-0 mb-2 text-sm text-[#ff6b6b]"><%= error %></p>
+        <% } %>
+        <p class="m-0 mb-6 text-white/50">
+          Not connected — endpoints are serving synthetic mock data. Set
+          <code>PUZZEL_CLIENT_KEY</code>, <code>PUZZEL_CLIENT_SECRET</code>,
+          <code>PUZZEL_TENANT_ID</code>, and <code>PUZZEL_USER_ID</code> in
+          <code>mock-server/.env</code> (see <code>.env.example</code>), then
+          connect below.
+        </p>
+        <form method="POST" action="/connect" class="m-0">
+          <button
+            type="submit"
+            class="cursor-pointer rounded-lg border-0 bg-[#ff5a1f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#e64f18]"
+          >
+            Connect to Puzzel
+          </button>
+        </form>
+      </div>
+    </div>
+    <% } %>
   </body>
 </html>

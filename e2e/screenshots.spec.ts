@@ -1,33 +1,37 @@
 import { test } from '@playwright/test'
+import { RESOLUTIONS } from '@screenly/edge-apps/test/screenshots'
 import {
-  createMockScreenlyForScreenshots,
-  getScreenshotsDir,
-  RESOLUTIONS,
-  setupClockMock,
-  setupScreenlyJsMock,
-} from '@screenly/edge-apps/test/screenshots'
-import path from 'path'
-
-const { screenlyJsContent } = createMockScreenlyForScreenshots()
+  dashboardScreenlyJsContent,
+  setupDashboardRoutes,
+  setupEmptyQueuesRoutes,
+  takeScreenshot,
+} from './screenshots.lib'
 
 for (const { width, height } of RESOLUTIONS) {
-  test(`screenshot ${width}x${height}`, async ({ browser }) => {
-    const screenshotsDir = getScreenshotsDir()
+  test(`screenshot dashboard ${width}x${height}`, async ({ browser }) => {
+    await takeScreenshot(
+      browser,
+      width,
+      height,
+      `dashboard-${width}x${height}.png`,
+      dashboardScreenlyJsContent,
+      (context) => setupDashboardRoutes(context),
+    )
+  })
+}
 
-    const context = await browser.newContext({ viewport: { width, height } })
-    const page = await context.newPage()
-
-    await setupClockMock(page)
-    await setupScreenlyJsMock(page, screenlyJsContent)
-
-    await page.goto('/')
-    await page.waitForLoadState('networkidle')
-
-    await page.screenshot({
-      path: path.join(screenshotsDir, `${width}x${height}.png`),
-      fullPage: false,
-    })
-
-    await context.close()
+for (const [width, height] of [
+  [1920, 1080],
+  [1080, 1920],
+]) {
+  test(`screenshot empty-queues ${width}x${height}`, async ({ browser }) => {
+    await takeScreenshot(
+      browser,
+      width,
+      height,
+      `empty-queues-${width}x${height}.png`,
+      dashboardScreenlyJsContent,
+      (context) => setupEmptyQueuesRoutes(context),
+    )
   })
 }

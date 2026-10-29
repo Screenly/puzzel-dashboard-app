@@ -1,4 +1,8 @@
+[![Version](https://img.shields.io/github/v/release/Screenly/puzzel-dashboard-app)](https://github.com/Screenly/puzzel-dashboard-app/releases/latest)
+
 # Puzzel Dashboard App
+
+![Puzzel Dashboard App Preview](/screenshots/dashboard-1920x1080.webp)
 
 Puzzel Dashboard App - Screenly Edge App
 
@@ -34,11 +38,37 @@ bun run deploy
 screenly edge-app instance create
 ```
 
+### Releasing
+
+Pushes to `main` start a stage deploy, which waits for approval. To release to production, tag a commit on `main` and push the tag (the workflow refuses tags not on `main`); the production deploy also waits for approval:
+
+```bash
+git checkout main && git pull
+git tag v26.10.0
+git push origin v26.10.0
+```
+
+Then publish a GitHub Release whose notes list the pull requests merged since the previous release. Add `--draft` to review the notes before publishing:
+
+```bash
+gh release create v26.10.0 --verify-tag --generate-notes --title v26.10.0
+```
+
 ## Configuration
 
-| Setting   | Description                     | Required | Default            |
-| --------- | ------------------------------- | -------- | ------------------ |
-| `message` | The message displayed on screen | No       | `Hello, Screenly!` |
+Settings are defined in `screenly.yml` and mirrored in `screenly_qc.yml` (used for the QC/staging build).
+
+| Setting             | Description                                                                                                 | Required | Default |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- | -------- | ------- |
+| `access_token`      | For testing only. Production support for Puzzel ID OAuth is not implemented yet.                            | No       | —       |
+| `customer_key`      | Your Puzzel customer number.                                                                                | Yes      | —       |
+| `display_errors`    | For debugging purposes to display errors on the screen.                                                     | No       | `false` |
+| `override_locale`   | Override the default locale with a supported language code (e.g., en_US, fr_FR, de_DE).                     | No       | `en`    |
+| `override_timezone` | Override the default timezone with a supported timezone identifier (e.g., Europe/London, America/New_York). | No       | —       |
+| `refresh_interval`  | How often to refresh dashboard data, in seconds.                                                            | No       | `15`    |
+| `sentry_dsn`        | Sentry Client Key from Sentry SDK for error capturing.                                                      | No       | —       |
+| `user_group_name`   | Filter agent statuses to a specific Puzzel user group. Leave blank to show all agents.                      | No       | —       |
+| `user_id`           | The Puzzel user ID associated with your OIDC client's Product Access. Required for API requests to succeed. | Yes      | —       |
 
 ## Screenshots
 
