@@ -6,7 +6,6 @@ import {
   setupTheme,
   signalReady,
 } from '@screenly/edge-apps'
-import { getLocale } from '@screenly/edge-apps/utils'
 import { refresh } from './dashboard'
 import { DEFAULT_REFRESH_INTERVAL_SECONDS } from './constants'
 
@@ -18,10 +17,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     'refresh_interval',
     DEFAULT_REFRESH_INTERVAL_SECONDS,
   )
-  const locale = await getLocale()
 
-  await refresh(locale)
+  await refresh()
   signalReady()
 
-  setInterval(() => refresh(locale), refreshInterval * 1000)
+  setInterval(() => refresh(), refreshInterval * 1000)
 })
