@@ -10,17 +10,6 @@ settings:
     title: Access Token
     optional: true
     help_text: For testing only. Production support for Puzzel ID OAuth is not implemented yet.
-  api_base_url:
-    type: string
-    default_value: 'https://api.puzzel.com/ContactCentre5'
-    title: API Base URL
-    optional: true
-    help_text:
-      schema_version: 1
-      properties:
-        advanced: true
-        help_text: Base URL of the Puzzel Contact Centre REST API. Override to point at a local mock server during development.
-        type: url
   customer_key:
     type: string
     title: Customer Key
@@ -32,29 +21,48 @@ settings:
     title: Display Errors
     optional: true
     help_text:
-      schema_version: 1
       properties:
         advanced: true
         help_text: For debugging purposes to display errors on the screen.
         type: boolean
+      schema_version: 1
+  override_locale:
+    type: string
+    default_value: en
+    title: Override Locale
+    optional: true
+    help_text: |
+      Override the default locale with a supported language code (e.g., en_US, fr_FR, de_DE).
+  override_timezone:
+    type: string
+    default_value: ''
+    title: Override Timezone
+    optional: true
+    help_text: |
+      Override the default timezone with a supported timezone identifier (e.g., Europe/London, America/New_York).
   refresh_interval:
     type: string
     default_value: '15'
     title: Refresh Interval
     optional: true
     help_text:
-      schema_version: 1
       properties:
         help_text: How often to refresh dashboard data, in seconds.
         type: number
+      schema_version: 1
   sentry_dsn:
     type: secret
     title: Sentry Client Key
     optional: true
-    is_global: true
     help_text: Sentry Client Key from Sentry SDK for error capturing.
+    is_global: true
   user_group_name:
     type: string
     title: User Group Name
     optional: true
     help_text: Filter agent statuses to a specific Puzzel user group. Leave blank to show all agents.
+  user_id:
+    type: string
+    title: User ID
+    optional: false
+    help_text: The Puzzel user ID associated with your OIDC client's Product Access. Required for API requests to succeed.

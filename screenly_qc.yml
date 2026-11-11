@@ -1,0 +1,68 @@
+---
+syntax: manifest_v1
+description: Display real-time Puzzel Contact Centre queue and agent stats on your Screenly digital signage screens
+categories:
+  - Dashboards
+ready_signal: true
+settings:
+  access_token:
+    type: secret
+    title: Access Token
+    optional: true
+    help_text: For testing only. Production support for Puzzel ID OAuth is not implemented yet.
+  customer_key:
+    type: string
+    title: Customer Key
+    optional: false
+    help_text: Your Puzzel customer number.
+  display_errors:
+    type: string
+    default_value: 'false'
+    title: Display Errors
+    optional: true
+    help_text:
+      properties:
+        advanced: true
+        help_text: For debugging purposes to display errors on the screen.
+        type: boolean
+      schema_version: 1
+  override_locale:
+    type: string
+    default_value: en
+    title: Override Locale
+    optional: true
+    help_text: |
+      Override the default locale with a supported language code (e.g., en_US, fr_FR, de_DE).
+  override_timezone:
+    type: string
+    default_value: ''
+    title: Override Timezone
+    optional: true
+    help_text: |
+      Override the default timezone with a supported timezone identifier (e.g., Europe/London, America/New_York).
+  refresh_interval:
+    type: string
+    default_value: '15'
+    title: Refresh Interval
+    optional: true
+    help_text:
+      properties:
+        help_text: How often to refresh dashboard data, in seconds.
+        type: number
+      schema_version: 1
+  sentry_dsn:
+    type: secret
+    title: Sentry Client Key
+    optional: true
+    help_text: Sentry Client Key from Sentry SDK for error capturing.
+    is_global: true
+  user_group_name:
+    type: string
+    title: User Group Name
+    optional: true
+    help_text: Filter agent statuses to a specific Puzzel user group. Leave blank to show all agents.
+  user_id:
+    type: string
+    title: User ID
+    optional: false
+    help_text: The Puzzel user ID associated with your OIDC client's Product Access. Required for API requests to succeed.
