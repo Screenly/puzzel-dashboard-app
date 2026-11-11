@@ -56,7 +56,7 @@ gh release create v26.10.0 --verify-tag --generate-notes --title v26.10.0
 
 ## Configuration
 
-Settings are defined in `screenly.yml` and mirrored in `screenly_qc.yml` (used for the QC/staging build).
+Settings are defined in `screenly.yml`.
 
 | Setting             | Description                                                                                                 | Required | Default |
 | ------------------- | ----------------------------------------------------------------------------------------------------------- | -------- | ------- |
