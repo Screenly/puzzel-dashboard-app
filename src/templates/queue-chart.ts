@@ -10,9 +10,19 @@ export function mountQueueChart(
   container: HTMLElement,
   queue: QueueStats,
 ): void {
+  const data = [
+    queue.callsOfferedToday,
+    queue.callsAnsweredToday,
+    queue.ciqsAnsweredToday,
+  ]
+
   const existingCanvas = container.querySelector('canvas')
-  if (existingCanvas) Chart.getChart(existingCanvas)?.destroy()
-  container.replaceChildren()
+  const existingChart = existingCanvas && Chart.getChart(existingCanvas)
+  if (existingChart) {
+    existingChart.data.datasets[0].data = data
+    existingChart.update()
+    return
+  }
 
   const canvas = document.createElement('canvas')
   container.appendChild(canvas)
@@ -21,16 +31,7 @@ export function mountQueueChart(
     type: 'bar',
     data: {
       labels: ['Offered', 'Answered', 'Callback'],
-      datasets: [
-        {
-          data: [
-            queue.callsOfferedToday,
-            queue.callsAnsweredToday,
-            queue.ciqsAnsweredToday,
-          ],
-          backgroundColor: CHART_COLORS,
-        },
-      ],
+      datasets: [{ data, backgroundColor: CHART_COLORS, barPercentage: 0.5 }],
     },
     options: {
       responsive: true,

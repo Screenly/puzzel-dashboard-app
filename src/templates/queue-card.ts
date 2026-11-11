@@ -1,73 +1,31 @@
 import { html, render, type TemplateResult } from 'lit-html'
 import type { QueueStats } from '../api'
-import { formatDuration } from './queue-card.lib'
 import { mountQueueChart } from './queue-chart'
 
-function queueCardTemplate(queue: QueueStats, locale: string): TemplateResult {
-  const number = new Intl.NumberFormat(locale)
+const MAX_QUEUE_CARDS = 3
 
+function queueCardTemplate(queue: QueueStats): TemplateResult {
   return html`
     <div class="queue-card">
-      <h2 class="queue-card-title">${queue.description}</h2>
-      <dl class="queue-card-stats">
-        <dt>Ready</dt>
-        <dd>${number.format(queue.agentsReady)}</dd>
-        <dt>Logged On</dt>
-        <dd>${number.format(queue.agentsLoggedOn)}</dd>
-        <dt>In Queue</dt>
-        <dd>${number.format(queue.queueSize)}</dd>
-        <dt>SLA</dt>
-        <dd>${number.format(queue.sla)}%</dd>
-        <dt>Offered</dt>
-        <dd>${number.format(queue.callsOfferedToday)}</dd>
-        <dt>Answered</dt>
-        <dd>${number.format(queue.callsAnsweredToday)}</dd>
-        <dt>Avg Wait</dt>
-        <dd>${formatDuration(queue.waitTimeAverageSeconds)}</dd>
-        <dt>Max Wait</dt>
-        <dd>${formatDuration(queue.waitTimeMaxSeconds)}</dd>
-      </dl>
+      <div class="queue-card-title">${queue.description}</div>
       <div class="queue-card-chart" id="queue-chart-${queue.id}"></div>
     </div>
   `
 }
 
-function renderCards(
-  container: HTMLElement,
-  queues: QueueStats[],
-  locale: string,
-): void {
-  render(
-    html`${queues.map((queue) => queueCardTemplate(queue, locale))}`,
-    container,
-  )
-
-  for (const queue of queues) {
-    const chartContainer = document.getElementById(`queue-chart-${queue.id}`)
-    if (chartContainer) mountQueueChart(chartContainer, queue)
-  }
-}
-
-function countFittingCards(container: HTMLElement): number {
-  const cards = Array.from(container.children) as HTMLElement[]
-  const bottomLimit = container.parentElement?.getBoundingClientRect().bottom
-
-  if (bottomLimit === undefined) return cards.length
-
-  return cards.filter(
-    (card) => card.getBoundingClientRect().bottom <= bottomLimit,
-  ).length
-}
-
 export function mountQueueCards(
   container: HTMLElement,
   queues: QueueStats[],
-  locale: string,
 ): void {
-  renderCards(container, queues, locale)
+  const visibleQueues = queues.slice(0, MAX_QUEUE_CARDS)
 
-  const fittingCount = countFittingCards(container)
-  if (fittingCount < queues.length) {
-    renderCards(container, queues.slice(0, fittingCount), locale)
+  render(
+    html`${visibleQueues.map((queue) => queueCardTemplate(queue))}`,
+    container,
+  )
+
+  for (const queue of visibleQueues) {
+    const chartContainer = document.getElementById(`queue-chart-${queue.id}`)
+    if (chartContainer) mountQueueChart(chartContainer, queue)
   }
 }

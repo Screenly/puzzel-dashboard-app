@@ -20,38 +20,30 @@
 
 @layer components {
   .queue-card {
-    @apply flex flex-col gap-3 rounded-xl bg-neutral-800 p-5;
+    @apply flex flex-col gap-3 rounded-2xl bg-neutral-800 p-5;
   }
 
   .queue-card-title {
-    @apply text-5xl font-semibold;
-  }
-
-  .queue-card-stats {
-    @apply grid grid-cols-2 gap-x-4 gap-y-2 text-2xl;
-  }
-
-  .queue-card-stats dt {
-    @apply text-neutral-400;
-  }
-
-  .queue-card-stats dd {
-    @apply text-right font-medium;
+    @apply min-h-28 text-5xl leading-tight font-semibold;
   }
 
   .queue-card-chart {
-    @apply mt-1 h-32;
+    @apply mt-1 min-h-0 flex-1;
   }
 
   .agent-tile {
-    @apply flex flex-col items-center justify-center gap-1 rounded-lg p-4 text-center;
+    @apply flex flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl bg-neutral-800 p-4 text-center;
   }
 
   .agent-tile-name {
-    @apply text-3xl font-semibold;
+    @apply w-full truncate text-3xl leading-tight font-semibold;
   }
 
   .agent-tile-status {
-    @apply text-2xl uppercase tracking-wide opacity-90;
+    @apply inline-flex items-center gap-2 rounded-full bg-neutral-700 px-4 py-1.5 text-xl font-medium tracking-wide uppercase;
+  }
+
+  .agent-tile-status-dot {
+    @apply h-3 w-3 rounded-full;
   }
 }
